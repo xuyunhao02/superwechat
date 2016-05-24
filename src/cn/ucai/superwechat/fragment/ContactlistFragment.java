@@ -204,8 +204,10 @@ public class ContactlistFragment extends Fragment {
 			public void onClick(View v) {
 				query.getText().clear();
 				hideSoftKeyboard();
+				setListener();
 			}
 		});
+
 		
 		// 设置adapter
 		adapter = new ContactAdapter(getActivity(), cn.ucai.superwechat.R.layout.row_contact, contactList);
@@ -277,6 +279,48 @@ public class ContactlistFragment extends Fragment {
 			progressBar.setVisibility(View.GONE);
 		}
 		registerContactListChangedReceiver();
+	}
+
+	private void setListener() {
+		setContactItemClickListener();
+		setContactListTouchListener();
+		setAddContactListener();
+	}
+
+	private void setAddContactListener() {
+
+	}
+
+	private void setContactListTouchListener() {
+
+	}
+
+	private void setContactItemClickListener() {
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				String username = adapter.getItem(position).getUsername();
+				if (Constant.NEW_FRIENDS_USERNAME.equals(username)) {
+					// 进入申请与通知页面
+					EMUser user = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList().get(Constant.NEW_FRIENDS_USERNAME);
+					user.setUnreadMsgCount(0);
+					startActivity(new Intent(getActivity(), NewFriendsMsgActivity.class));
+				} else if (Constant.GROUP_USERNAME.equals(username)) {
+					// 进入群聊列表页面
+					startActivity(new Intent(getActivity(), GroupsActivity.class));
+				} else if(Constant.CHAT_ROOM.equals(username)){
+					//进入聊天室列表页面
+					startActivity(new Intent(getActivity(), PublicChatRoomsActivity.class));
+				}else if(Constant.CHAT_ROBOT.equals(username)){
+					//进入Robot列表页面
+					startActivity(new Intent(getActivity(), RobotsActivity.class));
+				}else {
+					// demo中直接进入聊天页面，实际一般是进入用户详情页
+					startActivity(new Intent(getActivity(), ChatActivity.class).putExtra("userId", adapter.getItem(position).getUsername()));
+				}
+			}
+		});
 	}
 
 	@Override

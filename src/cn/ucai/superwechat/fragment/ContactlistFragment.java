@@ -43,6 +43,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
 import com.easemob.chat.EMContactManager;
 import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.EMLog;
@@ -54,6 +55,7 @@ import java.util.List;
 
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.DemoHXSDKHelper;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.activity.AddContactActivity;
@@ -67,6 +69,8 @@ import cn.ucai.superwechat.adapter.ContactAdapter;
 import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import cn.ucai.superwechat.applib.controller.HXSDKHelper.HXSyncListener;
 import cn.ucai.superwechat.bean.Contact;
+import cn.ucai.superwechat.data.ApiParams;
+import cn.ucai.superwechat.data.GsonRequest;
 import cn.ucai.superwechat.db.EMUserDao;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.domain.EMUser;
@@ -363,6 +367,16 @@ public class ContactlistFragment extends Fragment {
 		pd.setMessage(st1);
 		pd.setCanceledOnTouchOutside(false);
 		pd.show();
+		try {
+			String path = new ApiParams()
+                    .with(I.Contact.USER_NAME,SuperWeChatApplication.getInstance().getUserName())
+                    .with(I.Contact.CU_NAME,tobeDeleteUser.getMContactCname())
+                    .getRequestUrl(I.REQUEST_DELETE_CONTACT);
+			((MainActivity)getActivity()).executeRequest(new GsonRequest<Boolean>(path,
+					Boolean.class,responseDelecaContactListener(tobeDeleteUser),((MainActivity)getActivity()).errorListener()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -392,6 +406,19 @@ public class ContactlistFragment extends Fragment {
 			}
 		}).start();
 
+	}
+
+	private Response.Listener<Boolean> responseDelecaContactListener(final Contact tobeDeleteUser) {
+		return new Response.Listener<Boolean>() {
+			@Override
+			public void onResponse(Boolean response) {
+				if (response) {
+					SuperWeChatApplication.getInstance().getUserList().remove(tobeDeleteUser.getMContactUserName());
+					SuperWeChatApplication.getInstance().getContactList().remove(tobeDeleteUser);
+					getActivity().sendStickyBroadcast(new Intent("update"));
+				}
+			}
+		};
 	}
 
 	/**
@@ -500,9 +527,9 @@ public class ContactlistFragment extends Fragment {
 		// 添加user"申请与通知"
 		Contact newFriends = new Contact();
 		newFriends.setMContactId(-1);
+		String strChat = getActivity().getString(cn.ucai.superwechat.R.string.Application_and_notify);
 		newFriends.setMContactCname(Constant.NEW_FRIENDS_USERNAME);
 		newFriends.setMUserName(Constant.NEW_FRIENDS_USERNAME);
-		String strChat = getActivity().getString(cn.ucai.superwechat.R.string.Application_and_notify);
 		newFriends.setMUserNick(strChat);
 		if(!mcontactList.contains(newFriends) ){
 			this.mcontactList.add(0, newFriends);

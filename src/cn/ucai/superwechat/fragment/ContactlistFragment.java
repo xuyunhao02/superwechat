@@ -355,7 +355,6 @@ public class ContactlistFragment extends Fragment {
 
 	/**
 	 * 删除联系人
-
 	 */
 	public void deleteContact(final Contact tobeDeleteUser) {
 		String st1 = getResources().getString(R.string.deleting);

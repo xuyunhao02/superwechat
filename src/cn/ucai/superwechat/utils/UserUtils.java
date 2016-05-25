@@ -84,6 +84,11 @@ public class UserUtils {
 			setUserAvatar(getAvatarPath(userName),imageView);
 		}
 	}
+	public static void setUserBeanAvatar(User user, NetworkImageView imageView){
+		if(user!=null&&user.getMUserName()!=null){
+			setUserAvatar(getAvatarPath(user.getMUserName()),imageView);
+		}
+	}
 
 	private static void setUserAvatar(String url, NetworkImageView imageView) {
 		if (url == null || url.isEmpty())return;
@@ -130,16 +135,35 @@ public class UserUtils {
     		textView.setText(username);
     	}
     }
+	public static void setUserBeanNick(String userName,TextView textView){
+		Contact contact = getUserBeanInfo(userName);
+		if(contact!=null){
+			if(contact.getMUserNick()!=null){
+				textView.setText(contact.getMUserNick());
+			}else if (contact.getMContactCname()!=null){
+				textView.setText(contact.getMContactCname());
+			}
+		}else {
+			textView.setText(userName);
+		}
+	}
 
-    /**
+
+	/**
      * 设置当前用户昵称
      */
     public static void setCurrentUserNick(TextView textView){
-    	EMUser user = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getUserProfileManager().getCurrentUserInfo();
-    	if(textView != null){
-    		textView.setText(user.getNick());
-    	}
-    }
+		EMUser user = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getUserProfileManager().getCurrentUserInfo();
+		if(textView != null){
+			textView.setText(user.getNick());
+		}
+	}
+	public static void setCurrentUserBeanNick(TextView textView){
+		User user = SuperWeChatApplication.getInstance().getUser();
+		if(user != null&&user.getMUserNick()!=null&&textView!=null){
+			textView.setText(user.getMUserNick());
+		}
+	}
 
 
     /**

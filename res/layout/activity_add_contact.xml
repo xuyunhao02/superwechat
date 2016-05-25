@@ -15,7 +15,7 @@
 
         <include layout="@layout/commom_back_btn" />
 
-        <TextView
+        <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/add_list_friends"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,9 +51,9 @@
     <LinearLayout
         android:id="@+id/ll_user"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:background="@drawable/mm_listitem"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -95,6 +95,13 @@
                 android:text="@string/button_add"
                 android:textSize="14sp" />
         </RelativeLayout>
+
     </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="添加无结果"
+        android:textSize="20sp"
+        android:textColor="#000" />
 
 </LinearLayout>

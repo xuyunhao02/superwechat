@@ -21,12 +21,12 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
+import com.android.volley.toolbox.NetworkImageView;
 import com.easemob.chat.EMContactManager;
 
 import cn.ucai.superwechat.DemoHXSDKHelper;
@@ -43,7 +43,7 @@ public class AddContactActivity extends BaseActivity{
 	private LinearLayout searchedUserLayout;
 	private TextView nameText,mTextView;
 	private Button searchBtn;
-	private ImageView avatar;
+	private NetworkImageView avatar;
 	private InputMethodManager inputMethodManager;
 	private String toAddUsername;
 	private ProgressDialog progressDialog;
@@ -54,7 +54,7 @@ public class AddContactActivity extends BaseActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(cn.ucai.superwechat.R.layout.activity_add_contact);
-		mTextView = (TextView) findViewById(cn.ucai.superwechat.R.id.add_list_friends);
+		mTextView = (TextView) findViewById(R.id.add_list_friends);
 
 		editText = (EditText) findViewById(cn.ucai.superwechat.R.id.edit_note);
 		String strAdd = getResources().getString(cn.ucai.superwechat.R.string.add_friend);
@@ -64,7 +64,7 @@ public class AddContactActivity extends BaseActivity{
 		searchedUserLayout = (LinearLayout) findViewById(cn.ucai.superwechat.R.id.ll_user);
 		nameText = (TextView) findViewById(cn.ucai.superwechat.R.id.name);
 		searchBtn = (Button) findViewById(cn.ucai.superwechat.R.id.search);
-		avatar = (ImageView) findViewById(cn.ucai.superwechat.R.id.avatar);
+		avatar = (NetworkImageView) findViewById(R.id.avatar);
 		mTvNothing = (TextView) findViewById(R.id.tv_show_nothing);
 		inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 	}
@@ -110,6 +110,7 @@ public class AddContactActivity extends BaseActivity{
 					//服务器存在此用户，显示此用户和添加按钮
 					searchedUserLayout.setVisibility(View.VISIBLE);
 					nameText.setText(toAddUsername);
+					mTvNothing.setVisibility(View.GONE);
 
 				} else {
 					searchedUserLayout.setVisibility(View.GONE);

@@ -57,6 +57,10 @@ public class AddContactActivity extends BaseActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		initView();
+	}
+
+	private void initView() {
 		setContentView(cn.ucai.superwechat.R.layout.activity_add_contact);
 		mTextView = (TextView) findViewById(R.id.add_list_friends);
 
@@ -72,7 +76,6 @@ public class AddContactActivity extends BaseActivity{
 		mTvNothing = (TextView) findViewById(R.id.tv_show_nothing);
 		inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 	}
-
 
 	/**
 	 * 查找contact
@@ -130,10 +133,8 @@ public class AddContactActivity extends BaseActivity{
 		};
 	}
 
-
 	/**
 	 *  添加contact
-	 * @param view
 	 */
 	public void addContact(View view){
 		if(SuperWeChatApplication.getInstance().getUserName().equals(nameText.getText().toString())){

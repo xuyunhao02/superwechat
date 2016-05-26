@@ -26,6 +26,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.easemob.chat.EMChatManager;
 import com.easemob.util.EMLog;
 
 import java.util.ArrayList;
@@ -106,11 +107,12 @@ public class ContactAdapter extends BaseAdapter implements SectionIndexer{
 		}
 		//显示申请与通知item
 		if(username.equals(Constant.NEW_FRIENDS_USERNAME)){
-		    holder.nameTextview.setText(user.getMContactCname());
+		    holder.nameTextview.setText(user.getMUserNick());
 		    holder.avatar.setDefaultImageResId(R.drawable.new_friends_icon);
 			holder.avatar.setImageUrl("", RequestManager.getImageLoader());
+			int unreadMsgCountTotal = EMChatManager.getInstance().getUnreadMsgsCount();
 			holder.avatar.setErrorImageResId(R.drawable.new_friends_icon);
-			if(user.getMUserUnreadMsgCount() > 0){
+			if(user.getMUserUnreadMsgCount() > 0|| unreadMsgCountTotal>0){
 			    holder.unreadMsgView.setVisibility(View.VISIBLE);
 			   holder.unreadMsgView.setText(user.getMUserUnreadMsgCount()+"");
 			}else{

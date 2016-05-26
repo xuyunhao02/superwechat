@@ -1,13 +1,9 @@
 package cn.ucai.superwechat.fragment;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Hashtable;
-import java.util.List;
-
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -37,6 +33,13 @@ import android.widget.Toast;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMConversation.EMConversationType;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Hashtable;
+import java.util.List;
+
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.activity.ChatActivity;
@@ -60,7 +63,7 @@ public class ChatAllHistoryFragment extends Fragment implements OnClickListener 
 	public TextView errorText;
 	private boolean hidden;
 	private List<EMConversation> conversationList = new ArrayList<EMConversation>();
-		
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(cn.ucai.superwechat.R.layout.fragment_conversation_history, container, false);
@@ -74,14 +77,14 @@ public class ChatAllHistoryFragment extends Fragment implements OnClickListener 
 		inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 		errorItem = (RelativeLayout) getView().findViewById(cn.ucai.superwechat.R.id.rl_error_item);
 		errorText = (TextView) errorItem.findViewById(cn.ucai.superwechat.R.id.tv_connect_errormsg);
-		
+
 		conversationList.addAll(loadConversationsWithRecentChat());
 		listView = (ListView) getView().findViewById(cn.ucai.superwechat.R.id.list);
 		adapter = new ChatAllHistoryAdapter(getActivity(), 1, conversationList);
 		// 设置adapter
 		listView.setAdapter(adapter);
-				
-		
+
+
 		final String st2 = getResources().getString(cn.ucai.superwechat.R.string.Cant_chat_with_yourself);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -104,7 +107,7 @@ public class ChatAllHistoryFragment extends Fragment implements OnClickListener 
 	                        intent.putExtra("chatType", ChatActivity.CHATTYPE_GROUP);
 	                        intent.putExtra("groupId", username);
 				        }
-				        
+
 				    }else{
 				        // it is single chat
                         intent.putExtra("userId", username);
@@ -155,7 +158,7 @@ public class ChatAllHistoryFragment extends Fragment implements OnClickListener 
 				hideSoftKeyboard();
 			}
 		});
-		
+
 	}
 
 	void hideSoftKeyboard() {
@@ -194,7 +197,7 @@ public class ChatAllHistoryFragment extends Fragment implements OnClickListener 
 
 		// 更新消息未读数
 		((MainActivity) getActivity()).updateUnreadLabel();
-		
+
 		return handled ? true : super.onContextItemSelected(item);
 	}
 
@@ -246,6 +249,8 @@ public class ChatAllHistoryFragment extends Fragment implements OnClickListener 
 		return list;
 	}
 
+
+
 	/**
 	 * 根据最后一条消息的时间排序
 	 * @param conversationList
@@ -295,6 +300,31 @@ public class ChatAllHistoryFragment extends Fragment implements OnClickListener 
     }
 
     @Override
-    public void onClick(View v) {        
+    public void onClick(View v) {
     }
+
+
+	class ContactListChangedReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			adapter.notifyDataSetChanged();
+		}
+	}
+	private ContactListChangedReceiver mContactListChangedReceiver;
+
+	private void registerContactListenerChangeReceiver() {
+		mContactListChangedReceiver = new ContactListChangedReceiver();
+		IntentFilter filter = new IntentFilter("update_contact_list");
+		getActivity().registerReceiver(mContactListChangedReceiver, filter);
+	}
+
+	@Override
+	public void onDestroyView() {
+
+		super.onDestroyView();
+		if (mContactListChangedReceiver != null) {
+			getActivity().unregisterReceiver(mContactListChangedReceiver);
+		}
+	}
 }

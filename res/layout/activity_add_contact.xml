@@ -15,7 +15,7 @@
 
         <include layout="@layout/commom_back_btn" />
 
-        <com.android.volley.toolbox.NetworkImageView
+        <TextView
             android:id="@+id/add_list_friends"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
             android:background="@drawable/mm_listitem"
             android:duplicateParentState="true" >
 
-            <ImageView
+            <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/avatar"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
@@ -98,9 +98,11 @@
 
     </LinearLayout>
     <TextView
+        android:id="@+id/tv_show_nothing"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="添加无结果"
+        android:text="无结果"
+        android:visibility="gone"
         android:textSize="20sp"
         android:textColor="#000" />
 

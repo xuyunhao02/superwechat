@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#eee"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:id="@+id/layouy_new_group">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -35,6 +36,7 @@
             android:textSize="20sp" />
 
         <Button
+            android:id="@+id/btnSaveGroup"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -52,7 +54,7 @@
         android:layout_height="39dp"
         android:layout_margin="10dp"
         android:background="@drawable/button_normal_shape"
-        android:hint="@string/group_name"
+        android:hint="群聊名称"
         android:paddingLeft="5dp"
         android:singleLine="true"
         android:textSize="18sp" />
@@ -66,13 +68,42 @@
         android:layout_marginRight="10dp"
         android:background="@drawable/button_normal_shape"
         android:gravity="top"
-        android:hint="@string/Group_chat_profile"
+        android:hint="群聊简介"
         android:lines="5"
         android:paddingLeft="5dp"
         android:paddingTop="5dp"
         android:textSize="18sp" />
-    
-    
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="39dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/button_normal_shape"
+        >
+        <TextView
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="群图标"
+            android:textColor="#333"
+            android:layout_gravity="center_vertical"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            />
+
+        <ImageView
+            android:id="@+id/group_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:src="@drawable/groups_icon"
+            android:layout_gravity="center_vertical"
+
+            />
+
+    </LinearLayout>
     <LinearLayout 
         android:layout_width="match_parent"
        android:layout_height="39dp"
@@ -85,7 +116,7 @@
             android:layout_marginLeft="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/Whether_the_public"
+            android:text="是否公开"
             android:textColor="#333"
             android:layout_gravity="center_vertical"
             android:textSize="18sp"
@@ -116,7 +147,7 @@
             android:layout_marginLeft="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/Open_group_members_invited"
+            android:text="开放群成员邀请"
             android:textColor="#333"
             android:layout_gravity="center_vertical"
             android:textSize="18sp"

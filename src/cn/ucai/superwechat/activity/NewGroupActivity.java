@@ -40,20 +40,20 @@ public class NewGroupActivity extends BaseActivity {
 	private CheckBox checkBox;
 	private CheckBox memberCheckbox;
 	private LinearLayout openInviteContainer;
-	ImageView ivAvatar;
 
+	ImageView ivAvatar;
 	NewGroupActivity mContext;
 	OnSetAvatarListener mOnSetAvatarListener;
-	String avatarName;
+	String avatarName;//
 
-
+	private static final int CREAT_NEW_GROUP = 100;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(cn.ucai.superwechat.R.layout.activity_new_group);
+		mContext = this;
 		initView();
 		setListener();
-
 	}
 
 	private void setListener() {
@@ -62,12 +62,13 @@ public class NewGroupActivity extends BaseActivity {
 		setGroupIconClickListener();
 
 	}
-
+//实例化上传群头像的；
 	private void setGroupIconClickListener() {
+		//嵌套一个监听事件；
 		findViewById(R.id.group_avatar).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mOnSetAvatarListener = new OnSetAvatarListener(mContext, R.id.group_avatar, getAvatarName(), I.AVATAR_TYPE_GROUP_PATH);
+				mOnSetAvatarListener = new OnSetAvatarListener(mContext, R.id.layout_new_group, getAvatarName(), I.AVATAR_TYPE_GROUP_PATH);
 			}
 		});
 
@@ -89,7 +90,7 @@ public class NewGroupActivity extends BaseActivity {
 						  startActivity(intent);
 					  } else {
 						  // 进通讯录选人
-						  startActivityForResult(new Intent(mContext, GroupPickContactsActivity.class).putExtra("groupName", name), 0);
+						  startActivityForResult(new Intent(mContext, GroupPickContactsActivity.class).putExtra("groupName", name), CREAT_NEW_GROUP);
 					  }
 
 				  }
@@ -112,7 +113,6 @@ public class NewGroupActivity extends BaseActivity {
 	}
 
 	private void initView() {
-
 		groupNameEditText = (EditText) findViewById(cn.ucai.superwechat.R.id.edit_group_name);
 		introductionEditText = (EditText) findViewById(cn.ucai.superwechat.R.id.edit_group_introduction);
 		checkBox = (CheckBox) findViewById(cn.ucai.superwechat.R.id.cb_public);
@@ -124,11 +124,14 @@ public class NewGroupActivity extends BaseActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode != RESULT_OK) {
+			return;
+		}
 		if (resultCode == RESULT_OK) {
 			setProgressDialog();
 			createNewGroup(data);
 		} else {
-
+			mOnSetAvatarListener.setAvatar(requestCode, data, ivAvatar);
 		}
 	}
 
@@ -172,7 +175,7 @@ public class NewGroupActivity extends BaseActivity {
 	}
 
 	private void setProgressDialog() {
-		 String st1 = getResources().getString(cn.ucai.superwechat.R.string.Is_to_create_a_group_chat);
+		String st1 = getResources().getString(cn.ucai.superwechat.R.string.Is_to_create_a_group_chat);
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setMessage(st1);
 		progressDialog.setCanceledOnTouchOutside(false);

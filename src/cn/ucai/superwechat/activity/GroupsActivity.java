@@ -109,6 +109,7 @@ public class GroupsActivity extends BaseActivity {
 	private void setListener() {
 		setGroupListViewTouchListener();
 		setGroupListViewItemClickListener();
+		registerGroupListChangedReceiver();
 
 	}
 

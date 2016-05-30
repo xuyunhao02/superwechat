@@ -44,20 +44,20 @@ import cn.ucai.superwechat.utils.UserUtils;
  *
  */
 public class ContactAdapter extends BaseAdapter implements SectionIndexer{
-    private static final String TAG = "ContactAdapter";
-	ArrayList<String> list;
-	ArrayList<Contact> userList;
-	ArrayList<Contact> copyUserList;
+	private static final String TAG = "ContactAdapter";
+	List<String> list;
+	List<Contact> userList;
+	List<Contact> copyUserList;
 	private LayoutInflater layoutInflater;
 	private SparseIntArray positionOfSection;
 	private SparseIntArray sectionOfPosition;
 	private int res;
 	private MyFilter myFilter;
-    private boolean notiyfyByFilter;
+	private boolean notiyfyByFilter;
 	Context mContext;
 
-	public ContactAdapter(Context context, int resource, ArrayList<Contact> objects) {
-		mContext = context;
+	public ContactAdapter(Context context, int resource, List<Contact> objects) {
+		mContext=context;
 		this.res = resource;
 		this.userList = objects;
 		copyUserList = new ArrayList<Contact>();
@@ -71,15 +71,15 @@ public class ContactAdapter extends BaseAdapter implements SectionIndexer{
 
 	private static class ViewHolder {
 		NetworkImageView avatar;
-	    TextView unreadMsgView;
-	    TextView nameTextview;
-	    TextView tvHeader;
-    }
+		TextView unreadMsgView;
+		TextView nameTextview;
+		TextView tvHeader;
+	}
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-	    ViewHolder holder;
- 		if(convertView == null){
- 		    holder = new ViewHolder();
+		ViewHolder holder;
+		if(convertView == null){
+			holder = new ViewHolder();
 			convertView = layoutInflater.inflate(res, null);
 			holder.avatar = (NetworkImageView) convertView.findViewById(R.id.avatar);
 			holder.unreadMsgView = (TextView) convertView.findViewById(R.id.unread_msg_number);
@@ -87,9 +87,9 @@ public class ContactAdapter extends BaseAdapter implements SectionIndexer{
 			holder.tvHeader = (TextView) convertView.findViewById(R.id.header);
 			convertView.setTag(holder);
 		}else{
-		    holder = (ViewHolder) convertView.getTag();
+			holder = (ViewHolder) convertView.getTag();
 		}
-		
+
 		Contact user = getItem(position);
 		if(user == null)
 			Log.d("ContactAdapter", position + "");
@@ -98,52 +98,53 @@ public class ContactAdapter extends BaseAdapter implements SectionIndexer{
 		String header = user.getHeader();
 		if (position == 0 || header != null && !header.equals(getItem(position - 1).getHeader())) {
 			if (TextUtils.isEmpty(header)) {
-			    holder.tvHeader.setVisibility(View.GONE);
+				holder.tvHeader.setVisibility(View.GONE);
 			} else {
-			    holder.tvHeader.setVisibility(View.VISIBLE);
-			    holder.tvHeader.setText(header);
+				holder.tvHeader.setVisibility(View.VISIBLE);
+				holder.tvHeader.setText(header);
 			}
 		} else {
-		    holder.tvHeader.setVisibility(View.GONE);
+			holder.tvHeader.setVisibility(View.GONE);
 		}
 		//显示申请与通知item
 		if(username.equals(Constant.NEW_FRIENDS_USERNAME)){
-		    holder.nameTextview.setText(user.getMUserNick());
-		    holder.avatar.setDefaultImageResId(R.drawable.new_friends_icon);
+			holder.nameTextview.setText(user.getMUserNick());
+			holder.avatar.setDefaultImageResId(R.drawable.new_friends_icon);
 			holder.avatar.setImageUrl("", RequestManager.getImageLoader());
-			int unreadMsgCountTotal = ((DemoHXSDKHelper) HXSDKHelper.getInstance()).getContactList().get(Constant.NEW_FRIENDS_USERNAME).getUnreadMsgCount();
 			holder.avatar.setErrorImageResId(R.drawable.new_friends_icon);
-			if(user.getMUserUnreadMsgCount() > 0|| unreadMsgCountTotal>0){
-			    holder.unreadMsgView.setVisibility(View.VISIBLE);
-			   holder.unreadMsgView.setText(user.getMUserUnreadMsgCount()+"");
+			int unreadAddressCountTotal = ((DemoHXSDKHelper) HXSDKHelper.getInstance()).getContactList().get(Constant.NEW_FRIENDS_USERNAME)
+					.getUnreadMsgCount();
+			if(user.getMUserUnreadMsgCount() > 0 || unreadAddressCountTotal>0){
+				holder.unreadMsgView.setVisibility(View.VISIBLE);
+		//        holder.unreadMsgView.setText(user.getUnreadMsgCount()+"");
 			}else{
-			    holder.unreadMsgView.setVisibility(View.INVISIBLE);
+				holder.unreadMsgView.setVisibility(View.INVISIBLE);
 			}
 		}else if(username.equals(Constant.GROUP_USERNAME)){
 			//群聊item
-		    holder.nameTextview.setText(user.getMUserNick());
-		    holder.avatar.setDefaultImageResId(R.drawable.groups_icon);
-			holder.avatar.setImageUrl("", RequestManager.getImageLoader());
-			holder.avatar.setErrorImageResId(R.drawable.groups_icon);
+			holder.nameTextview.setText(user.getMUserNick());
+			holder.avatar.setDefaultImageResId(R.drawable.groups_icon);
+			holder.avatar.setImageUrl("",RequestManager.getImageLoader());
 		}else if(username.equals(Constant.CHAT_ROOM)){
-            //群聊item
-            holder.nameTextview.setText(user.getMUserNick());
-            holder.avatar.setDefaultImageResId(R.drawable.groups_icon);
+			//群聊item
+			holder.nameTextview.setText(user.getMUserNick());
+			holder.avatar.setDefaultImageResId(R.drawable.groups_icon);
 		}else if(username.equals(Constant.CHAT_ROBOT)){
 			//Robot item
 			holder.nameTextview.setText(user.getMUserNick());
 			holder.avatar.setImageResource(R.drawable.groups_icon);
 		}else{
-		    holder.nameTextview.setText(user.getMUserNick());
-		    //设置用户头像
+			//holder.nameTextview.setText(user.getNick());
+			UserUtils.setUserBeanNick(username,holder.nameTextview);
+			//设置用户头像
 			UserUtils.setUserBeanAvatar(username, holder.avatar);
 			if(holder.unreadMsgView != null)
-			    holder.unreadMsgView.setVisibility(View.INVISIBLE);
+				holder.unreadMsgView.setVisibility(View.INVISIBLE);
 		}
-		
+
 		return convertView;
 	}
-	
+
 	@Override
 	public Contact getItem(int position) {
 		return userList.get(position);
@@ -156,7 +157,7 @@ public class ContactAdapter extends BaseAdapter implements SectionIndexer{
 
 	@Override
 	public int getCount() {
-		return userList == null ? 0 : userList.size();
+		return userList==null?0:userList.size();
 	}
 
 	public int getPositionForSection(int section) {
@@ -166,7 +167,7 @@ public class ContactAdapter extends BaseAdapter implements SectionIndexer{
 	public int getSectionForPosition(int position) {
 		return sectionOfPosition.get(position);
 	}
-	
+
 	@Override
 	public Object[] getSections() {
 		positionOfSection = new SparseIntArray();
@@ -190,7 +191,6 @@ public class ContactAdapter extends BaseAdapter implements SectionIndexer{
 		}
 		return list.toArray(new String[list.size()]);
 	}
-	
 
 	public Filter getFilter() {
 		if(myFilter==null){
@@ -198,10 +198,10 @@ public class ContactAdapter extends BaseAdapter implements SectionIndexer{
 		}
 		return myFilter;
 	}
-	
+
 	private class  MyFilter extends Filter{
-        List<Contact> mOriginalList = null;
-		
+		List<Contact> mOriginalList = null;
+
 		public MyFilter(List<Contact> myList) {
 			this.mOriginalList = myList;
 		}
@@ -210,11 +210,11 @@ public class ContactAdapter extends BaseAdapter implements SectionIndexer{
 		protected synchronized FilterResults performFiltering(CharSequence prefix) {
 			FilterResults results = new FilterResults();
 			if(mOriginalList==null){
-			    mOriginalList = new ArrayList<Contact>();
+				mOriginalList = new ArrayList<Contact>();
 			}
 			EMLog.d(TAG, "contacts original size: " + mOriginalList.size());
 			EMLog.d(TAG, "contacts copy size: " + copyUserList.size());
-			
+
 			if(prefix==null || prefix.length()==0){
 				results.values = copyUserList;
 				results.count = copyUserList.size();
@@ -225,21 +225,20 @@ public class ContactAdapter extends BaseAdapter implements SectionIndexer{
 				for(int i=0;i<count;i++){
 					final Contact user = mOriginalList.get(i);
 					String username = user.getMContactCname();
-					
-					if(username.startsWith(prefixString)){
+					String nick = user.getMUserNick();
+					if (username.startsWith(prefixString) || nick.contains(prefix)) {
 						newValues.add(user);
-					}
-					else{
-						 final String[] words = username.split(" ");
-	                     final int wordCount = words.length;
-	
-	                     // Start at index 0, in case valueText starts with space(s)
-	                     for (int k = 0; k < wordCount; k++) {
-	                         if (words[k].startsWith(prefixString)) {
-	                             newValues.add(user);
-	                             break;
-	                         }
-	                     }
+					} else {
+						final String[] words = username.split(" ");
+						final int wordCount = words.length;
+
+						// Start at index 0, in case valueText starts with space(s)
+						for (int k = 0; k < wordCount; k++) {
+							if (words[k].startsWith(prefixString)) {
+								newValues.add(user);
+								break;
+							}
+						}
 					}
 				}
 				results.values=newValues;
@@ -251,12 +250,12 @@ public class ContactAdapter extends BaseAdapter implements SectionIndexer{
 
 		@Override
 		protected synchronized void publishResults(CharSequence constraint,
-				FilterResults results) {
+												   FilterResults results) {
 			userList.clear();
 			userList.addAll((List<Contact>)results.values);
 			EMLog.d(TAG, "publish contacts filter results size: " + results.count);
 			if (results.count > 0) {
-			    notiyfyByFilter = true;
+				notiyfyByFilter = true;
 				notifyDataSetChanged();
 				notiyfyByFilter = false;
 			} else {
@@ -264,16 +263,16 @@ public class ContactAdapter extends BaseAdapter implements SectionIndexer{
 			}
 		}
 	}
-	
-	
+
+
 	@Override
 	public void notifyDataSetChanged() {
-	    super.notifyDataSetChanged();
-	    if(!notiyfyByFilter){
-	        copyUserList.clear();
-	        copyUserList.addAll(userList);
-	    }
+		super.notifyDataSetChanged();
+		if(!notiyfyByFilter){
+			copyUserList.clear();
+			copyUserList.addAll(userList);
+		}
 	}
-	
+
 
 }

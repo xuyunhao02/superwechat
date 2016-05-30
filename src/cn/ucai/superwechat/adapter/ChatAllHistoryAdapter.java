@@ -20,11 +20,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
+import com.android.volley.toolbox.NetworkImageView;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatRoom;
 import com.easemob.chat.EMConversation;
@@ -44,6 +44,7 @@ import java.util.Map;
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.DemoHXSDKHelper;
 import cn.ucai.superwechat.applib.controller.HXSDKHelper;
+import cn.ucai.superwechat.bean.Group;
 import cn.ucai.superwechat.domain.RobotUser;
 import cn.ucai.superwechat.utils.DateUtils;
 import cn.ucai.superwechat.utils.SmileUtils;
@@ -82,7 +83,7 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 			holder.unreadLabel = (TextView) convertView.findViewById(cn.ucai.superwechat.R.id.unread_msg_number);
 			holder.message = (TextView) convertView.findViewById(cn.ucai.superwechat.R.id.message);
 			holder.time = (TextView) convertView.findViewById(cn.ucai.superwechat.R.id.time);
-			holder.avatar = (ImageView) convertView.findViewById(cn.ucai.superwechat.R.id.avatar);
+			holder.avatar = (NetworkImageView) convertView.findViewById(cn.ucai.superwechat.R.id.avatar);
 			holder.msgState = convertView.findViewById(cn.ucai.superwechat.R.id.msg_state);
 			holder.list_item_layout = (RelativeLayout) convertView.findViewById(cn.ucai.superwechat.R.id.list_item_layout);
 			convertView.setTag(holder);
@@ -99,15 +100,16 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 		String username = conversation.getUserName();
 		if (conversation.getType() == EMConversationType.GroupChat) {
 			// 群聊消息，显示群聊头像
-			holder.avatar.setImageResource(cn.ucai.superwechat.R.drawable.group_icon);
-			EMGroup group = EMGroupManager.getInstance().getGroup(username);
-			holder.name.setText(group != null ? group.getGroupName() : username);
+		//	holder.avatar.setImageResource(cn.ucai.superwechat.R.drawable.group_icon);
+			Group group = UserUtils.getGroupBeanFromHXID(username);
+		//	EMGroup group = EMGroupManager.getInstance().getGroup(username);
+			holder.name.setText(group != null ? group.getMGroupName() : username);
 		} else if(conversation.getType() == EMConversationType.ChatRoom){
 		    holder.avatar.setImageResource(cn.ucai.superwechat.R.drawable.group_icon);
             EMChatRoom room = EMChatManager.getInstance().getChatRoom(username);
             holder.name.setText(room != null && !TextUtils.isEmpty(room.getName()) ? room.getName() : username);
 		}else {
-		    UserUtils.setUserAvatar(getContext(), username, holder.avatar);
+		    UserUtils.setUserBeanAvatar( username, holder.avatar);
 			if (username.equals(Constant.GROUP_USERNAME)) {
 				holder.name.setText("群聊");
 
@@ -219,7 +221,7 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 		/** 最后一条消息的时间 */
 		TextView time;
 		/** 用户头像 */
-		ImageView avatar;
+		NetworkImageView avatar;
 		/** 最后一条消息的发送状态 */
 		View msgState;
 		/** 整个list中每一行总布局 */

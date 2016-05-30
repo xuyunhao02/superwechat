@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#eee"
     android:orientation="vertical"
-    android:id="@+id/layouy_new_group">
+    android:id="@+id/layout_new_group">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -94,7 +94,7 @@
             />
 
         <ImageView
-            android:id="@+id/group_avatar"
+            android:id="@+id/group_avatar1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"

@@ -569,7 +569,6 @@ public class ContactlistFragment extends Fragment {
 	}
 
 	class ContactListChangedReceiver extends BroadcastReceiver {
-
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			refresh();
@@ -578,7 +577,7 @@ public class ContactlistFragment extends Fragment {
 	}
 	private void registerContactListChangedReceiver() {
 		mReceiver = new ContactListChangedReceiver();
-		IntentFilter intentFilter = new IntentFilter("updata_contact_list");
+		IntentFilter intentFilter = new IntentFilter("update_contact_list");
 		getActivity().registerReceiver(mReceiver, intentFilter);
 	}
 }

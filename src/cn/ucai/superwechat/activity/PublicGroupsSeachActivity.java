@@ -10,43 +10,63 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
 import com.easemob.EMError;
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
 import com.easemob.exceptions.EaseMobException;
 
+import cn.ucai.superwechat.I;
+import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.bean.Group;
+import cn.ucai.superwechat.data.ApiParams;
+import cn.ucai.superwechat.data.GsonRequest;
+import cn.ucai.superwechat.utils.Utils;
+
 public class PublicGroupsSeachActivity extends BaseActivity{
     private RelativeLayout containerLayout;
     private EditText idET;
     private TextView nameText;
-    public static EMGroup searchedGroup;
+    public static Group searchedGroup;
+    ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
+        initView();
+        searchedGroup = null;
+    }
+
+    private void initView() {
         setContentView(cn.ucai.superwechat.R.layout.activity_public_groups_search);
-        
         containerLayout = (RelativeLayout) findViewById(cn.ucai.superwechat.R.id.rl_searched_group);
         idET = (EditText) findViewById(cn.ucai.superwechat.R.id.et_search_id);
         nameText = (TextView) findViewById(cn.ucai.superwechat.R.id.name);
-        
-        searchedGroup = null;
     }
-    
+
     /**
      * 搜索
-     *
      */
     public void searchGroup(View v){
         if(TextUtils.isEmpty(idET.getText())){
             return;
         }
         
-        final ProgressDialog pd = new ProgressDialog(this);
+        pd = new ProgressDialog(this);
         pd.setMessage(getResources().getString(cn.ucai.superwechat.R.string.searching));
         pd.setCancelable(false);
         pd.show();
-        
+
+        try {
+            String path = new ApiParams()
+                    .with(I.Group.HX_ID, idET.getText().toString())
+                    .getRequestUrl(I.REQUEST_FIND_PUBLIC_GROUP_BY_HXID);
+            executeRequest(new GsonRequest<Group>(path, Group.class,
+                    responseFindPublicGroupListener(), errorListener()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         new Thread(new Runnable() {
 
             public void run() {
@@ -56,7 +76,7 @@ public class PublicGroupsSeachActivity extends BaseActivity{
                         public void run() {
                             pd.dismiss();
                             containerLayout.setVisibility(View.VISIBLE);
-                            nameText.setText(searchedGroup.getGroupName());
+                            nameText.setText(searchedGroup.getMGroupName());
                         }
                     });
                     
@@ -79,8 +99,24 @@ public class PublicGroupsSeachActivity extends BaseActivity{
         }).start();
         
     }
-    
-    
+
+    private Response.Listener<Group> responseFindPublicGroupListener() {
+        return new Response.Listener<Group>() {
+            @Override
+            public void onResponse(Group group) {
+                if (group != null) {
+                    containerLayout.setVisibility(View.VISIBLE);
+                    nameText.setText(searchedGroup.getMGroupName());
+                } else {
+                    Utils.showToast(PublicGroupsSeachActivity.this, R.string.group_not_existed,
+                            Toast.LENGTH_LONG);
+                }
+                pd.dismiss();
+            }
+        };
+    }
+
+
     /**
      * 点击搜索到的群组进入群组信息页面
      */

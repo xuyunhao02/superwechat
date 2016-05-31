@@ -54,11 +54,11 @@ public class GroupSimpleDetailActivity extends BaseActivity {
 			groupname = groupInfo.getMGroupName();
 		    groupid = groupInfo.getMGroupHxid();
 		}else{
-//		    group = PublicGroupsSeachActivity.searchedGroup;
-//		    if(group == null)
-//		        return;
-//		    groupname = group.getGroupName();
-//		    groupid = group.getGroupId();
+		    group = PublicGroupsSeachActivity.searchedGroup;
+		    if(group == null)
+		        return;
+		    groupname = group.getMGroupName();
+		    groupid = group.getMGroupHxid();
 		}
 		
 		tv_name.setText(groupname);
@@ -145,10 +145,10 @@ public class GroupSimpleDetailActivity extends BaseActivity {
 		 if (!SuperWeChatApplication.getInstance().getGroupList().contains(group)) {
 
 			 btn_add_group.setEnabled(true);
+			 UserUtils.setGroupBeanAvatar(groupid, niv_avatar);
 			 tv_name.setText(group.getMGroupName());
 			 tv_admin.setText(group.getMGroupOwner());
 			 tv_introduction.setText(group.getMGroupDescription());
-			 UserUtils.setGroupBeanAvatar(groupid, niv_avatar);
 		 }
 	 }
 

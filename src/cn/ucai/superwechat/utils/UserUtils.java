@@ -115,7 +115,7 @@ public class UserUtils {
 	}
 
 
-	private static void setUserAvatar(String url, NetworkImageView imageView) {
+	public static void setUserAvatar(String url, NetworkImageView imageView) {
 		if (url == null || url.isEmpty())return;
 
 		imageView.setDefaultImageResId(R.drawable.default_avatar);
@@ -171,6 +171,16 @@ public class UserUtils {
 			}
 		}else {
 			textView.setText(userName);
+		}
+	}
+
+	public static void setUserBeanNick(User user, TextView textView) {
+		if (user != null) {
+			if (user.getMUserNick() != null) {
+				textView.setText(user.getMUserNick());
+			} else if (user.getMUserName() != null) {
+				textView.setText(user.getMUserName());
+			}
 		}
 	}
 
